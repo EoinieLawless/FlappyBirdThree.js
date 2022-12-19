@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+
+<html>
+
+<script src="https://unpkg.com/three@0.122.0/build/three.js"></script>
+<!-- Orbit controls import -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.122.0/examples/js/controls/OrbitControls.min.js"></script>
+
+
+
+<head>
+	<h1></h1>
+	<meta charset="UTF-8">
+	<title>Flappy bird project</title>
+	<style>
+		body {
+			margin: 0;
+		}
+	</style>
+</head>
+
+<body>
+
+
+
+	<script type="module">
+
+
+
+
+		const scene = new THREE.Scene();
+
+
+		//camera 
+		const camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 100, 10000);
+
+		const renderer = new THREE.WebGLRenderer();
+		renderer.shadowMap.enabled = true;
+		renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+		renderer.setSize(window.innerWidth, window.innerHeight);
+		document.body.appendChild(renderer.domElement);
+
+		//camera helper
+		// const helper = new THREE.CameraHelper(camera);
+		// scene.add(helper);
+
+		const controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+
+		//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		//The plane on ground
+		const PlaneGeometry = new THREE.PlaneGeometry(12000, 400, 1, 1);
+		const planeMaterial = new THREE.MeshLambertMaterial({ color: 'yellow', side: THREE.DoubleSide });
+		const plane = new THREE.Mesh(PlaneGeometry, planeMaterial);
+		plane.receiveShadow = true;
+		plane.rotateX(- Math.PI / 2);
+		plane.position.y = 0;
+		scene.add(plane);
+
+		//The sky background
+		const SkyGeometry = new THREE.PlaneGeometry(12000, 5000, 1, 1);
+		const skyMaterial = new THREE.MeshLambertMaterial({ color: 'blue', side: THREE.DoubleSide });
+		const sky = new THREE.Mesh(SkyGeometry, skyMaterial);
+		sky.receiveShadow = true;
+		sky.rotateZ(- Math.PI / 1);
+		sky.position.y = 300;
+		sky.position.z = -400;
+		scene.add(sky);
+
+		//The end wall
+		const EndWallGeometry = new THREE.PlaneGeometry(400, 400, 1, 1);
+		const EndWallMaterial = new THREE.MeshStandardMaterial({ color: 'yellow', side: THREE.DoubleSide });
+		const EndWall = new THREE.Mesh(EndWallGeometry, EndWallMaterial);
+		EndWall.receiveShadow = true;
+		EndWall.rotateY(-  Math.PI / 2);
+		EndWall.position.y = 0;
+		EndWall.position.x = -800;
+		scene.add(EndWall);
+
+		//The Start wall 
+		const StartWallGeometry = new THREE.PlaneGeometry(400, 400, 1, 1);
+		const StartWallMaterial = new THREE.MeshStandardMaterial({ color: 'yellow', side: THREE.DoubleSide });
+		const StartWall = new THREE.Mesh(StartWallGeometry, StartWallMaterial);
+		StartWall.receiveShadow = true;
+		StartWall.rotateY(-  Math.PI / 2);
+		StartWall.position.y = 0;
+		StartWall.position.x = 2000;
+		scene.add(StartWall);
+
+		//cover wall
+		const coverGeometry = new THREE.PlaneGeometry(12000, 500, 1, 1);
+		const coverMaterial = new THREE.MeshLambertMaterial({ color: 'orange', side: THREE.DoubleSide });
+		const cover = new THREE.Mesh(coverGeometry, coverMaterial);
+		cover.receiveShadow = true;
+		cover.rotateZ(- Math.PI / 1);
+		cover.position.y = -250;
+		cover.position.z = 200;
+		scene.add(cover);
+
+
+		//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+		//group trying 
+		// const topgeometry = new THREE.CylinderGeometry(50, 50, 110, 320);
+		// const topmaterial = new THREE.MeshLambertMaterial({color: 'lightgreen' });
+		// const top = new THREE.Mesh(topgeometry, topmaterial);
+		// const bottom = new THREE.Mesh(topgeometry, topmaterial);
+		// const cube = new THREE.Group();
+		// cube.add(top);
+		// cube.add(bottom);
+
+		const pipegeometry = new THREE.CylinderGeometry(50, 50, 500, 320);
+		const pipeaterial = new THREE.MeshLambertMaterial({ color: 'lightgreen' });
+		const pipe = new THREE.Mesh(pipegeometry, pipeaterial);
+		const pipe2 = new THREE.Mesh(pipegeometry, pipeaterial);
+		const pipe3 = new THREE.Mesh(pipegeometry, pipeaterial);
+		const pipe4 = new THREE.Mesh(pipegeometry, pipeaterial);
+		const pipe5 = new THREE.Mesh(pipegeometry, pipeaterial);
+		const pipe6 = new THREE.Mesh(pipegeometry, pipeaterial);
+		scene.add(pipe);
+		scene.add(pipe2);
+		scene.add(pipe3);
+		scene.add(pipe4);
+		scene.add(pipe5);
+		scene.add(pipe6);
+
+
+
+		pipe.position.y = randomIntFromInterval(-200, 30)
+		pipe.position.x = 2000;
+		pipe2.position.y = pipe.position.y + 650;
+		pipe2.position.x = pipe.position.x;
+
+		pipe3.position.y = randomIntFromInterval(-200, 30)
+		pipe3.position.x = 3000;
+		pipe4.position.y = pipe3.position.y + 650;
+		pipe4.position.x = pipe3.position.x;
+
+
+		pipe5.position.y = randomIntFromInterval(-200, 30)
+		pipe5.position.x = 4000;
+		pipe6.position.y = pipe5.position.y + 650;
+		pipe6.position.x = pipe5.position.x;
+
+		//light source
+		var spotLight = new THREE.SpotLight(0xffffff);
+		spotLight.position.set(100, 10000, 10000);
+		spotLight.castShadow = true;
+
+		spotLight.shadow.mapSize.width = 512;
+		spotLight.shadow.mapSize.height = 512;
+		spotLight.shadow.camera.near = 0.5;
+		spotLight.shadow.camera.far = 500;
+		scene.add(spotLight);
+
+		var spotLight2 = new THREE.SpotLight(0xffffff);
+		spotLight2.position.set(-100, -1000, -10000);
+		spotLight2.castShadow = true;
+
+		spotLight2.shadow.mapSize.width = 512;
+		spotLight2.shadow.mapSize.height = 512;
+		spotLight2.shadow.camera.near = 0.5;
+		spotLight2.shadow.camera.far = 500;
+		scene.add(spotLight2);
+
+		const spotLightHelper = new THREE.PointLightHelper(spotLight, 1);
+		scene.add(spotLightHelper);
+
+
+
+
+		//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+		//The player 
+		const playergeometry = new THREE.SphereGeometry(20, 32, 16);
+		const playermaterial = new THREE.MeshLambertMaterial({});
+		const player = new THREE.Mesh(playergeometry, playermaterial,);
+		player.position.y = 80
+		player.position.x = -40
+		player.castShadow = true;
+		scene.add(player);
+
+		let BallColour = 'yellow';
+
+		camera.position.z = 500;
+		camera.position.y = 150;
+		camera.position.x = 400;
+		camera.far = 3000;
+
+
+
+		//controls.update();
+
+		//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		let acceleration = 9.8;
+		let bounce_distance = 7;
+		let bottom_position_y = plane.position.y + 20;
+		let time_step = 0.02;
+		let pipespeed = 5;
+
+		var Score = 0;
+
+		// time_counter is calculated to be the time the ball just reached the top position
+		// this is simply calculated with the s = (1/2)gt*t formula, which is the case when ball is dropped from the top position
+		let time_counter = Math.sqrt(bounce_distance * 2 / acceleration);
+		let initial_speed = acceleration * time_counter;
+
+		function move() {
+
+
+			pipe.position.x -= pipespeed;
+			pipe2.position.x -= pipespeed;
+			pipe3.position.x -= pipespeed;
+			pipe4.position.x -= pipespeed;
+			pipe5.position.x -= pipespeed;
+			pipe6.position.x -= pipespeed;
+
+
+			// calculate sphere position with the s2 = s1 + ut + (1/2)gt*t formula
+			player.position.y = player.position.y + initial_speed * time_counter - 1 * acceleration * time_counter * time_counter
+
+
+			// advance time
+			time_counter += time_step;
+
+			//keeping the ball on plane 
+			if (player.position.y >= (bottom_position_y) + player.position.y
+				|| player.position.y <= (bottom_position_y))
+				player.position.y = 20;
+		}
+
+		function collision() {
+
+			// if(pipe2.position.y - 250 > player.position.y < pipe.position.y + 250)
+			// 	BallColour = 'blue'
+
+			//first pipes passing through and adding score
+			let pipeLeft = pipe.position.x - 25, pipeRight = pipe.position.x + 25;
+			let pipeTop = pipe2.position.y - 250, pipeBottom = pipe.position.y + 250;
+
+			if (player.position.x > pipeLeft && player.position.x < pipeRight)
+				if (!(player.position.y < pipeTop && player.position.y > pipeBottom))
+					Lose()
+
+
+			if (player.position.x == pipe.position.x)
+				if ((player.position.y < pipeTop && player.position.y > pipeBottom))
+					Score++; scoretext.innerHTML = "Score:" + Score;
+
+			//--------------------------------------------------------------------------------
+			let pipe2Left = pipe3.position.x - 25, pipe2Right = pipe3.position.x + 25;
+			let pipe2Top = pipe4.position.y - 250, pipe2Bottom = pipe3.position.y + 250;
+
+			if (player.position.x > pipe2Left && player.position.x < pipe2Right)
+				if (!(player.position.y < pipe2Top && player.position.y > pipe2Bottom))
+					Lose()
+
+
+			if (player.position.x == pipe3.position.x)
+				if ((player.position.y < pipe2Top && player.position.y > pipe2Bottom))
+					Score++; scoretext.innerHTML = "Score:" + Score;
+
+			//--------------------------------------------------------------------------------
+
+			let pipe3Left = pipe5.position.x - 25, pipe3Right = pipe5.position.x + 25;
+			let pipe3Top = pipe6.position.y - 250, pipe3Bottom = pipe5.position.y + 250;
+
+			if (player.position.x > pipe3Left && player.position.x < pipe3Right)
+				if (!(player.position.y < pipe3Top && player.position.y > pipe3Bottom))
+					Lose()
+
+
+			if (player.position.x == pipe5.position.x)
+				if ((player.position.y < pipe3Top && player.position.y > pipe3Bottom))
+					Score++; scoretext.innerHTML = "Score:" + Score;
+			//--------------------------------------------------------------------------------
+
+
+		}
+
+		function Lose() {
+			BallColour = 'blue'
+			pipespeed = 0;
+
+			var losetext = document.createElement('div');
+			losetext.style.position = 'absolute';
+			losetext.style.backgroundColor = "Transparent";
+			losetext.style.color = "Red";
+			losetext.style.fontSize = "100px"
+			losetext.style.fontFamily = "'Kanit', sans-serif"
+			losetext.innerHTML = "LOSER";
+			losetext.style.bottom = '50%';
+			losetext.style.left = '40%';
+			losetext.style.padding = "20px";
+			document.body.appendChild(losetext);
+		}
+
+
+
+
+		var controltext = document.createElement('div');
+		controltext.style.position = 'absolute';
+		controltext.style.backgroundColor = "Transparent";
+		controltext.style.color = "black";
+		controltext.style.fontSize = "50px"
+		controltext.style.fontFamily = "'Kanit', sans-serif"
+		controltext.innerHTML = "Space to jump --- H for hard mode ";
+		controltext.style.bottom = '1%';
+		controltext.style.left = '40%';
+		controltext.style.padding = "20px";
+		document.body.appendChild(controltext);
+
+		var scoretext = document.createElement('div');
+		scoretext.style.position = 'absolute';
+		scoretext.style.backgroundColor = "Transparent";
+		scoretext.style.color = "black";
+		scoretext.style.fontSize = "50px"
+		scoretext.style.fontFamily = "'Kanit', sans-serif"
+		scoretext.innerHTML = "Score:" + Score;
+		scoretext.style.bottom = '1%';
+		scoretext.style.left = '10%';
+		scoretext.style.padding = "20px";
+		document.body.appendChild(scoretext);
+
+		//to get random height for pipes
+		function randomIntFromInterval(min, max) { // min and max included 
+			return Math.floor(Math.random() * (max - min + 1) + min)
+		}
+
+
+		function reloadObject() {
+
+			if (pipe.position.x <= EndWall.position.x)
+				pipe.position.x = StartWall.position.x,
+					pipe.position.y = randomIntFromInterval(-200, 50),
+					pipe2.position.y = pipe.position.y + 650;
+
+			if (pipe2.position.x <= EndWall.position.x)
+				pipe2.position.x = StartWall.position.x;
+
+			if (pipe3.position.x <= EndWall.position.x)
+				pipe3.position.x = StartWall.position.x,
+					pipe3.position.y = randomIntFromInterval(-200, 50),
+					pipe4.position.y = pipe3.position.y + 650;
+
+			if (pipe4.position.x <= EndWall.position.x)
+				pipe4.position.x = StartWall.position.x;
+
+
+			if (pipe5.position.x <= EndWall.position.x)
+				pipe5.position.x = StartWall.position.x,
+					pipe5.position.y = randomIntFromInterval(-200, 50),
+					pipe6.position.y = pipe5.position.y + 650;
+
+			if (pipe6.position.x <= EndWall.position.x)
+				pipe6.position.x = StartWall.position.x;
+
+
+
+		}
+
+
+		//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		function repeatme() {
+
+			renderer.render(scene, camera);
+
+			move()
+			reloadObject()
+			collision()
+
+
+			//color
+			player.material.color.set(BallColour);
+
+
+			requestAnimationFrame(repeatme);
+		}
+		repeatme();
+
+		//keypresses for actions
+		document.onkeydown = function (e) {
+			// print out onkeydown event
+			console.log(e);
+			switch (e.which) {
+
+
+
+				//spacebar
+				case 32:
+					time_counter = 0;
+					break;
+
+				case 72:
+					pipespeed = 10;
+					Score = "KACHOW"
+					break;
+
+
+			}
+		};
+
+
+	</script>
+
+</body>
+
+</html>
